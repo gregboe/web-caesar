@@ -17,6 +17,7 @@
 import webapp2
 import caesar
 import string
+import cgi
 
 def buildPage(textarea_content):
     rotation_label = "<label>Rotate by how much?</label>"
@@ -43,9 +44,12 @@ class MainHandler(webapp2.RequestHandler):
 
     def post(self):
         message = self.request.get('message')
-        rotation = self.request.get('rotation')
+        rotation = int(self.request.get('rotation'))
         encrypted_message = caesar.encrypt(message,rotation)
+        encrypted_message = cgi.escape(encrypted_message)
+
         content = buildPage(encrypted_message)
+
         self.response.write(content)
 
 app = webapp2.WSGIApplication([
